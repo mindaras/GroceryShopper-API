@@ -1,0 +1,1 @@
+An API for GroceryShopper application which utilizes various AWS services and was created with the Serverless framework.
