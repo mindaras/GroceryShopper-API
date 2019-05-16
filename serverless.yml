@@ -9,7 +9,7 @@ provider:
     REGION: ${self:provider.region}
     PRODUCTS_TABLE: Products-${self:provider.stage}
     SHOPPING_LIST_TABLE: ShoppingList-${self:provider.stage}
-  iamRoleStatements:
+  iamRoleStatements: 
     - Effect: Allow
       Action:
         - dynamodb:Query
@@ -23,12 +23,12 @@ provider:
         - { "Fn::GetAtt": ["ShoppingListTable", "Arn"] }
 
 functions:
-  hello:
-    handler: handler.hello
-    events:
-      - http:
-          path: hello
-          method: get
+  createProduct:
+      handler: products/create.main
+      events:
+        - http:
+            path: products/create
+            method: POST
 
 resources:
   Resources:
