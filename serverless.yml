@@ -30,6 +30,13 @@ functions:
             path: products/create
             method: POST
 
+  getProducts:
+      handler: products/getAll.main
+      events:
+        - http:
+            path: products/get
+            method: GET
+
 resources:
   Resources:
     ProductsTable:
