@@ -37,6 +37,20 @@ functions:
             path: products/get
             method: GET
 
+  getProduct:
+      handler: products/get.main
+      events:
+        - http:
+            path: products/get/{id}
+            method: GET
+
+  deleteProduct:
+      handler: products/delete.main
+      events:
+        - http:
+            path: products/delete
+            method: DELETE
+
 resources:
   Resources:
     ProductsTable:
@@ -61,9 +75,13 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: N
         KeySchema:
           - AttributeName: id
             KeyType: HASH
+          - AttributeName: timestamp
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
