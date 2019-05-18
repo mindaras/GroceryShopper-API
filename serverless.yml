@@ -93,7 +93,26 @@ functions:
             path: shoppingList/delete
             method: DELETE
 
+  signup:
+      handler: auth/signup.main
+      events:
+        - http:
+            path: auth/signup
+            method: POST
             
+  signin:
+      handler: auth/signin.main
+      events:
+        - http:
+            path: auth/signin
+            method: POST
+
+  refreshSession:
+      handler: auth/refreshSession.main
+      events:
+        - http:
+            path: auth/refreshSession
+            method: POST
 
 resources:
   Resources:
