@@ -4,25 +4,24 @@ const uuid = require("uuid");
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
 module.exports.main = async event => {
-  const { name, type, price } = JSON.parse(event.body);
+  const { name, price, type } = JSON.parse(event.body);
   const params = {
-    TableName: process.env.PRODUCTS_TABLE,
+    TableName: process.env.SHOPPING_LIST_TABLE,
     Item: {
       id: uuid.v1(),
+      timestamp: Date.now(),
       name,
-      type,
-      price
+      price,
+      type
     }
   };
 
-  return await new Promise(resolve => {
+  return new Promise(resolve => {
     documentClient.put(params, err => {
       if (err) {
         resolve({
           statusCode: 501,
-          body: JSON.stringify({
-            message: err.message || "Could not create an item."
-          })
+          message: err.message || "Cannot create an item."
         });
       } else {
         resolve({

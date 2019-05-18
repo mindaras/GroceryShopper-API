@@ -44,12 +44,56 @@ functions:
             path: products/get/{id}
             method: GET
 
+  updateProduct:
+      handler: products/update.main
+      events:
+        - http:
+            path: products/update
+            method: POST
+
   deleteProduct:
       handler: products/delete.main
       events:
         - http:
             path: products/delete
             method: DELETE
+
+  addToShoppingList:
+      handler: shoppingList/create.main
+      events:
+        - http:
+            path: shoppingList/create
+            method: POST
+
+  getProductsFromShoppingList:
+      handler: shoppingList/getAll.main
+      events:
+        - http:
+            path: shoppingList/get
+            method: GET
+
+  getProductFromShoppingList:
+      handler: shoppingList/get.main
+      events:
+        - http:
+            path: shoppingList/get/{id}/{timestamp}
+            method: GET
+
+  updateInShoppingList:
+      handler: shoppingList/update.main
+      events:
+        - http:
+            path: shoppingList/update
+            method: POST
+
+  deleteFromShoppingList:
+      handler: shoppingList/delete.main
+      events:
+        - http:
+            path: shoppingList/delete
+            method: DELETE
+
+            
 
 resources:
   Resources:
