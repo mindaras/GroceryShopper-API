@@ -10,12 +10,14 @@ module.exports.main = async event => {
     }
   };
 
-  return new Promise(resolve => {
+  return await new Promise(resolve => {
     documentClient.get(params, (err, data) => {
       if (err) {
         resolve({
           statusCode: 500,
-          message: err.message || "Could not get an item."
+          body: JSON.stringify({
+            message: err.message || "Could not get an item."
+          })
         });
       } else {
         resolve({ statusCode: 200, body: JSON.stringify(data) });

@@ -13,12 +13,14 @@ module.exports.main = async event => {
     attribute => new AmazonCognitoIdentity.CognitoUserAttribute(attribute)
   );
 
-  return new Promise(resolve => {
+  return await new Promise(resolve => {
     userPool.signUp(username, password, attributeList, null, (err, result) => {
       if (err) {
         resolve({
           statusCode: 500,
-          message: err.message || "Could not signup the user."
+          body: JSON.stringify({
+            message: err.message || "Could not signup the user."
+          })
         });
       } else {
         resolve({

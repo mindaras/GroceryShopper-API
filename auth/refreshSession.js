@@ -13,12 +13,14 @@ module.exports.main = async event => {
   });
   const cognitoUser = new AmazonCognitoIdentity.CognitoUser({ Username, Pool });
 
-  return new Promise(resolve => {
+  return await new Promise(resolve => {
     cognitoUser.refreshSession(refreshToken, (err, session) => {
       if (err)
         resolve({
           statusCode: 500,
-          message: err.message || "Could not refresh the session."
+          body: JSON.stringify({
+            message: err.message || "Could not refresh the session."
+          })
         });
       else {
         const idToken = session.getIdToken();

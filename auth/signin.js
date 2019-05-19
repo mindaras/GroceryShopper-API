@@ -16,7 +16,7 @@ module.exports.main = async event => {
     Pool
   });
 
-  return new Promise(resolve => {
+  return await new Promise(resolve => {
     cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: result => {
         const idToken = result.getIdToken().getJwtToken();
@@ -34,7 +34,9 @@ module.exports.main = async event => {
       onFailure: err => {
         resolve({
           statusCode: 500,
-          message: err.message || "Could not signin the user."
+          body: JSON.stringify({
+            message: err.message || "Could not signin the user."
+          })
         });
       }
     });
