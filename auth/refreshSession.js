@@ -23,15 +23,11 @@ module.exports.main = async event => {
           })
         });
       else {
-        const idToken = session.getIdToken();
-        const refreshToken = session.getRefreshToken();
-
         resolve({
           statusCode: 200,
           body: JSON.stringify({
             username: Username,
-            name: idToken.payload.name,
-            idToken: idToken.getJwtToken(),
+            idToken: session.getIdToken().getJwtToken(),
             refreshToken: refreshToken.getToken()
           })
         });
