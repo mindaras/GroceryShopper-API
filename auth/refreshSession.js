@@ -26,7 +26,6 @@ module.exports.main = async event => {
         resolve({
           statusCode: 200,
           body: JSON.stringify({
-            username: Username,
             idToken: session.getIdToken().getJwtToken(),
             refreshToken: refreshToken.getToken()
           })
