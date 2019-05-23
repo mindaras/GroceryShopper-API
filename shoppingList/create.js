@@ -5,12 +5,15 @@ const decodeVerify = require("../auth/decodeVerify");
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
 module.exports.main = async event => {
-  const { username, idToken, name, price, type } = JSON.parse(event.body);
+  const { username, idToken, productId, name, price, type } = JSON.parse(
+    event.body
+  );
   const params = {
     TableName: process.env.SHOPPING_LIST_TABLE,
     Item: {
       id: uuid.v1(),
       timestamp: Date.now(),
+      productId,
       name,
       price,
       type
