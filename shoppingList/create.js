@@ -39,7 +39,10 @@ module.exports.main = async event => {
           } else {
             resolve({
               statusCode: 200,
-              body: JSON.stringify({ id: params.Item.id })
+              body: JSON.stringify({
+                id: params.Item.id,
+                timestamp: params.Item.timestamp
+              })
             });
           }
         });
