@@ -147,24 +147,9 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: timestamp
-            AttributeType: N
-          - AttributeName: productId
-            AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-          - AttributeName: timestamp
-            KeyType: RANGE
-        LocalSecondaryIndexes:
-          - IndexName: productId
-            KeySchema:
-              - AttributeName: id
-                KeyType: HASH
-              - AttributeName: productId
-                KeyType: RANGE
-            Projection:
-              ProjectionType: KEYS_ONLY
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

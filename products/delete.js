@@ -7,9 +7,7 @@ module.exports.main = async event => {
   const { username, idToken, id } = JSON.parse(event.body);
   const params = {
     TableName: process.env.PRODUCTS_TABLE,
-    Key: {
-      id
-    }
+    Key: { id }
   };
 
   return await new Promise(resolve => {

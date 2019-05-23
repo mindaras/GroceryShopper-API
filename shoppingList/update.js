@@ -19,12 +19,11 @@ module.exports.main = async event => {
           return;
         }
 
-        const updates = keys.map(({ id, timestamp }) => {
+        const updates = keys.map(({ id }) => {
           const params = {
             TableName: process.env.SHOPPING_LIST_TABLE,
             Item: {
               id,
-              timestamp,
               productId,
               name,
               type,

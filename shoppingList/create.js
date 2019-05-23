@@ -12,7 +12,6 @@ module.exports.main = async event => {
     TableName: process.env.SHOPPING_LIST_TABLE,
     Item: {
       id: uuid.v1(),
-      timestamp: Date.now(),
       productId,
       name,
       price,
@@ -42,10 +41,7 @@ module.exports.main = async event => {
           } else {
             resolve({
               statusCode: 200,
-              body: JSON.stringify({
-                id: params.Item.id,
-                timestamp: params.Item.timestamp
-              })
+              body: JSON.stringify({ id: params.Item.id })
             });
           }
         });

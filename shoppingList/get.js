@@ -3,13 +3,10 @@ const AWS = require("aws-sdk");
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
 module.exports.main = async event => {
-  const { id, timestamp } = event.pathParameters;
+  const { id } = event.pathParameters;
   const params = {
     TableName: process.env.SHOPPING_LIST_TABLE,
-    Key: {
-      id,
-      timestamp: parseInt(timestamp, 10)
-    }
+    Key: { id }
   };
 
   return await new Promise(resolve => {
