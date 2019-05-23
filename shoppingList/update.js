@@ -4,19 +4,9 @@ const decodeVerify = require("../auth/decodeVerify");
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
 module.exports.main = async event => {
-  const { username, idToken, id, timestamp, name, type, price } = JSON.parse(
+  const { username, idToken, productId, name, type, price, keys } = JSON.parse(
     event.body
   );
-  const params = {
-    TableName: process.env.SHOPPING_LIST_TABLE,
-    Item: {
-      id,
-      timestamp,
-      name,
-      type,
-      price
-    }
-  };
 
   return await new Promise(resolve => {
     decodeVerify(idToken)
@@ -29,21 +19,37 @@ module.exports.main = async event => {
           return;
         }
 
-        documentClient.put(params, err => {
-          if (err) {
-            resolve({
-              statusCode: 501,
-              body: JSON.stringify({
-                message: err.message || "Could not update an item."
-              })
+        const updates = keys.map(({ id, timestamp }) => {
+          const params = {
+            TableName: process.env.SHOPPING_LIST_TABLE,
+            Item: {
+              id,
+              timestamp,
+              productId,
+              name,
+              type,
+              price
+            }
+          };
+
+          return new Promise((res, rej) => {
+            documentClient.put(params, err => {
+              if (err) rej(err.message || "Could not update an item.");
+              else res(id);
             });
-          } else {
+          });
+        });
+
+        Promise.all(updates)
+          .then(result => {
             resolve({
               statusCode: 200,
-              body: JSON.stringify({ id: params.Item.id })
+              body: JSON.stringify({ updated: result.map(id => id) })
             });
-          }
-        });
+          })
+          .catch(e => {
+            resolve({ statusCode: 501, body: JSON.stringify({ message: e }) });
+          });
       })
       .catch(e => {
         resolve({
