@@ -9,7 +9,7 @@ provider:
     REGION: ${self:provider.region}
     PRODUCTS_TABLE: Products-${self:provider.stage}
     SHOPPING_LIST_TABLE: ShoppingList-${self:provider.stage}
-    BOUGHT_TABLE: Bought-${self:provider.stage}
+    BOUGHT_TABLE: BoughtList-${self:provider.stage}
   iamRoleStatements: 
     - Effect: Allow
       Action:
@@ -102,6 +102,13 @@ functions:
             path: bought/create
             method: POST
 
+  getBoughtProducts:
+      handler: bought/get.main
+      events:
+        - http:
+            path: bought/get
+            method: POST
+
   signup:
       handler: auth/signup.main
       events:
@@ -157,14 +164,14 @@ resources:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
-        TableName: Bought-${self:provider.stage}
+        TableName: BoughtList-${self:provider.stage}
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: status
             AttributeType: S
           - AttributeName: timestamp
             AttributeType: N
         KeySchema:
-          - AttributeName: id
+          - AttributeName: status
             KeyType: HASH
           - AttributeName: timestamp
             KeyType: RANGE

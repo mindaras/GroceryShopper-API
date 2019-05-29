@@ -1,5 +1,4 @@
 const AWS = require("aws-sdk");
-const uuid = require("uuid");
 const decodeVerify = require("../auth/decodeVerify");
 
 const documentClient = new AWS.DynamoDB.DocumentClient();
@@ -9,7 +8,7 @@ module.exports.main = async event => {
   const boughtParams = {
     TableName: process.env.BOUGHT_TABLE,
     Item: {
-      id: uuid.v1(),
+      status: "bought",
       timestamp: Date.now(),
       name,
       price,
@@ -56,11 +55,11 @@ module.exports.main = async event => {
           .then(() => {
             resolve({
               statusCode: 200,
-              body: JSON.stringify({ id: boughtParams.Item.id })
+              body: JSON.stringify({ timestamp: boughtParams.Item.timestamp })
             });
           })
           .catch(e =>
-            reject({ statusCode: 501, body: JSON.stringify({ message: e }) })
+            resolve({ statusCode: 501, body: JSON.stringify({ message: e }) })
           );
       })
       .catch(e => {
