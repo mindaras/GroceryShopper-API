@@ -6,7 +6,7 @@ const documentClient = new AWS.DynamoDB.DocumentClient();
 module.exports.main = async event => {
   const { username, idToken } = JSON.parse(event.body);
 
-  return new Promise(resolve => {
+  return await new Promise(resolve => {
     decodeVerify(idToken)
       .then(({ email }) => {
         if (email !== username) {

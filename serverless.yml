@@ -10,6 +10,7 @@ provider:
     PRODUCTS_TABLE: Products-${self:provider.stage}
     SHOPPING_LIST_TABLE: ShoppingList-${self:provider.stage}
     BOUGHT_TABLE: BoughtList-${self:provider.stage}
+    SPENDING_BUDGET_TABLE: SpendingBudget-${self:provider.stage}
   iamRoleStatements: 
     - Effect: Allow
       Action:
@@ -23,6 +24,7 @@ provider:
         - { "Fn::GetAtt": ["ProductsTable", "Arn"] }
         - { "Fn::GetAtt": ["ShoppingListTable", "Arn"] }
         - { "Fn::GetAtt": ["BoughtTable", "Arn"] }
+        - { "Fn::GetAtt": ["SpendingBudgetTable", "Arn"] }
 
 functions:
   createProduct:
@@ -109,6 +111,27 @@ functions:
             path: bought/get
             method: POST
 
+  getSpendingBudget:
+      handler: spendingBudget/get.main
+      events:
+        - http:
+            path: spendingBudget/get
+            method: GET
+
+  topUpSpendingBudget:
+      handler: spendingBudget/topUp.main
+      events:
+        - http:
+            path: spendingBudget/topUp
+            method: PUT
+
+  withdrawFromSpendingBudget:
+      handler: spendingBudget/withdraw.main
+      events:
+        - http:
+            path: spendingBudget/withdraw
+            method: PUT
+
   signup:
       handler: auth/signup.main
       events:
@@ -175,6 +198,20 @@ resources:
             KeyType: HASH
           - AttributeName: timestamp
             KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    SpendingBudgetTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: SpendingBudget-${self:provider.stage}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

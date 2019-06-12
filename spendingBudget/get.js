@@ -4,9 +4,9 @@ const documentClient = new AWS.DynamoDB.DocumentClient();
 
 module.exports.main = async event => {
   const params = {
-    TableName: process.env.PRODUCTS_TABLE,
+    TableName: process.env.SPENDING_BUDGET_TABLE,
     Key: {
-      id: event.pathParameters.id
+      id: "spendingBudget"
     }
   };
 
@@ -16,7 +16,7 @@ module.exports.main = async event => {
         resolve({
           statusCode: 500,
           body: JSON.stringify({
-            message: err.message || "Could not get an item."
+            message: err.message || "Could not get spending budget."
           })
         });
       } else {
