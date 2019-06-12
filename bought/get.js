@@ -48,11 +48,11 @@ module.exports.main = async event => {
           }
         });
       })
-      .catch(e =>
+      .catch(e => {
         resolve({
           statusCode: 401,
           body: JSON.stringify({ message: "Unauthorized operation." })
-        })
-      );
+        });
+      });
   });
 };

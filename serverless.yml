@@ -116,7 +116,7 @@ functions:
       events:
         - http:
             path: spendingBudget/get
-            method: GET
+            method: POST
 
   topUpSpendingBudget:
       handler: spendingBudget/topUp.main

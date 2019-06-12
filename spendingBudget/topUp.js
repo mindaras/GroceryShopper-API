@@ -7,26 +7,43 @@ module.exports.main = async event => {
   const { username, idToken, amount } = JSON.parse(event.body);
 
   return await new Promise(resolve => {
-    const params = {
-      TableName: process.env.SPENDING_BUDGET_TABLE,
-      Key: { id: "spendingBudget" },
-      UpdateExpression: "set #a = #a + :a",
-      ExpressionAttributeNames: { "#a": "amount" },
-      ExpressionAttributeValues: { ":a": amount },
-      ReturnValues: "ALL_NEW"
-    };
+    decodeVerify(idToken)
+      .then(({ email }) => {
+        if (email !== username) {
+          resolve({
+            statusCode: 401,
+            body: JSON.stringify({ message: "Unauthorized operation." })
+          });
+          return;
+        }
 
-    documentClient.update(params, (err, data) => {
-      if (err) {
-        resolve({
-          statusCode: 500,
-          body: JSON.stringify({
-            message: err.message || "Could not update spending budget."
-          })
+        const params = {
+          TableName: process.env.SPENDING_BUDGET_TABLE,
+          Key: { id: "spendingBudget" },
+          UpdateExpression: "set #a = #a + :a",
+          ExpressionAttributeNames: { "#a": "amount" },
+          ExpressionAttributeValues: { ":a": amount },
+          ReturnValues: "ALL_NEW"
+        };
+
+        documentClient.update(params, (err, data) => {
+          if (err) {
+            resolve({
+              statusCode: 500,
+              body: JSON.stringify({
+                message: err.message || "Could not update spending budget."
+              })
+            });
+          } else {
+            resolve({ statusCode: 200, body: JSON.stringify(data.Attributes) });
+          }
         });
-      } else {
-        resolve({ statusCode: 200, body: JSON.stringify(data.Attributes) });
-      }
-    });
+      })
+      .catch(e => {
+        resolve({
+          statusCode: 401,
+          body: JSON.stringify({ message: "Unauthorized operation." })
+        });
+      });
   });
 };
